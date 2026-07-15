@@ -1,0 +1,34 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/Profesor/**/*';
+@source '../../../../resources/views/filament/**/*';
+@source '../../../../vendor/jeffgreco13/filament-breezy/resources/**/*';
+
+@theme {
+    --color-primary: #004225;
+}
+
+.fi-sidebar {
+    background: linear-gradient(180deg, #060a3f 0%, #002e15 100%);
+}
+
+.fi-sidebar-item-icon,
+.fi-sidebar-item-label {
+    @apply text-white;
+}
+
+.fi-sidebar-item-btn:hover .fi-sidebar-item-icon,
+.fi-sidebar-item-btn:hover .fi-sidebar-item-label {
+    @apply text-lime-600;
+}
+
+.fi-sidebar-item.fi-active,
+.fi-sidebar-item.fi-active a {
+    @apply bg-green-600 text-white rounded-lg;
+}
+
+.fi-topbar .fi-user-menu-trigger {
+    display: flex;
+    align-items: center;
+    column-gap: 0.5rem;
+}
