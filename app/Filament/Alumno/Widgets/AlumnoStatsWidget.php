@@ -11,6 +11,8 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class AlumnoStatsWidget extends BaseWidget
 {
+    protected ?string $pollingInterval = '5s';
+
     protected function getStats(): array
     {
         $alumnoId = auth()->user()?->alumno?->id;

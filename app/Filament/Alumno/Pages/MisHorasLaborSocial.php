@@ -26,6 +26,8 @@ class MisHorasLaborSocial extends Page implements HasTable
 
     protected string $view = 'filament.pages.mis-horas-labor-social';
 
+    protected ?string $pollingInterval = '5s';
+
     public function getViewData(): array
     {
         $alumnoId = auth()->user()?->alumno?->id;

@@ -16,6 +16,8 @@ class MiHorario extends Page
 
     protected string $view = 'filament.pages.mi-horario-alumno';
 
+    protected ?string $pollingInterval = '5s';
+
     public function getViewData(): array
     {
         $alumno = auth()->user()?->alumno;

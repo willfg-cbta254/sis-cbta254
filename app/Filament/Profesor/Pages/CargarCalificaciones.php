@@ -8,13 +8,13 @@ use App\Models\Grupo;
 use App\Models\Materia;
 use App\Models\PeriodoEscolar;
 use BackedEnum;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class CargarCalificaciones extends Page implements HasForms
 {
@@ -30,68 +30,90 @@ class CargarCalificaciones extends Page implements HasForms
 
     protected string $view = 'filament.pages.cargar-calificaciones';
 
-    public ?int $grupo_id = null;
+    public ?int $selectedGroupId = null;
 
-    public ?int $materia_id = null;
+    public string $selectedGroupName = '';
+
+    public ?int $selectedMateriaId = null;
+
+    public string $selectedMateriaName = '';
 
     public array $calificaciones = [];
 
+    protected ?string $pollingInterval = '5s';
+
+    public function form(Schema $schema): Schema
+    {
+        return $schema->schema([]);
+    }
+
     public function mount(): void
     {
-        $this->grupo_id = request()->query('grupo_id');
-        $this->materia_id = request()->query('materia_id');
+        $this->selectedGroupId = request()->query('grupo_id');
+        $this->selectedMateriaId = request()->query('materia_id');
 
-        if ($this->grupo_id) {
+        if ($this->selectedGroupId) {
+            $this->selectedGroupName = Grupo::find($this->selectedGroupId)?->nombre ?? '';
+        }
+
+        if ($this->selectedMateriaId) {
+            $this->selectedMateriaName = Materia::find($this->selectedMateriaId)?->nombre ?? '';
             $this->loadAlumnos();
         }
     }
 
-    public function form(Schema $schema): Schema
+    public function selectGroup(int $groupId): void
     {
-        return $schema
-            ->components([
-                Select::make('grupo_id')
-                    ->label('Grupo')
-                    ->options(fn () => Grupo::whereHas('cargaAcademica', fn (Builder $q) => $q->where('profesor_id', auth()->user()?->profesor?->id))->pluck('nombre', 'id'))
-                    ->searchable()
-                    ->live()
-                    ->afterStateUpdated(fn () => $this->loadAlumnos())
-                    ->required(),
-                Select::make('materia_id')
-                    ->label('Materia')
-                    ->options(fn () => Materia::whereHas('cargaAcademica', fn (Builder $q) => $q
-                        ->where('profesor_id', auth()->user()?->profesor?->id)
-                        ->when($this->grupo_id, fn (Builder $q, $id) => $q->where('grupo_id', $id))
-                    )->pluck('nombre', 'id'))
-                    ->searchable()
-                    ->live()
-                    ->afterStateUpdated(fn () => $this->loadAlumnos())
-                    ->required(),
-            ])
-            ->model(Calificacion::class)
-            ->statePath('');
+        $this->selectedGroupId = $groupId;
+        $this->selectedGroupName = Grupo::find($groupId)?->nombre ?? '';
+        $this->selectedMateriaId = null;
+        $this->selectedMateriaName = '';
+        $this->calificaciones = [];
+    }
+
+    public function backToGroups(): void
+    {
+        $this->selectedGroupId = null;
+        $this->selectedGroupName = '';
+        $this->selectedMateriaId = null;
+        $this->selectedMateriaName = '';
+        $this->calificaciones = [];
+    }
+
+    public function selectMateria(int $materiaId): void
+    {
+        $this->selectedMateriaId = $materiaId;
+        $this->selectedMateriaName = Materia::find($materiaId)?->nombre ?? '';
+        $this->loadAlumnos();
+    }
+
+    public function backToMaterias(): void
+    {
+        $this->selectedMateriaId = null;
+        $this->selectedMateriaName = '';
+        $this->calificaciones = [];
     }
 
     public function loadAlumnos(): void
     {
         $this->calificaciones = [];
 
-        if (blank($this->grupo_id) || blank($this->materia_id)) {
+        if (blank($this->selectedGroupId) || blank($this->selectedMateriaId)) {
             return;
         }
 
         $profesorId = auth()->user()?->profesor?->id;
         $periodo = PeriodoEscolar::where('activo', true)->first();
 
-        $alumnos = Alumno::whereHas('inscripciones', fn (Builder $q) => $q->where('grupo_id', $this->grupo_id))
+        $alumnos = Alumno::whereHas('inscripciones', fn (Builder $q) => $q->where('grupo_id', $this->selectedGroupId))
             ->with('user')
             ->get();
 
         foreach ($alumnos as $alumno) {
             $existente = Calificacion::where('alumno_id', $alumno->id)
-                ->where('materia_id', $this->materia_id)
+                ->where('materia_id', $this->selectedMateriaId)
                 ->where('profesor_id', $profesorId)
-                ->where('grupo_id', $this->grupo_id)
+                ->where('grupo_id', $this->selectedGroupId)
                 ->where('periodo_escolar_id', $periodo?->id)
                 ->first();
 
@@ -110,15 +132,8 @@ class CargarCalificaciones extends Page implements HasForms
         }
     }
 
-    public function updatedMateriaId(): void
-    {
-        $this->loadAlumnos();
-    }
-
     public function save(): void
     {
-        $this->validate();
-
         $profesorId = auth()->user()?->profesor?->id;
 
         if (blank($profesorId)) {
@@ -149,9 +164,9 @@ class CargarCalificaciones extends Page implements HasForms
             $calificacion = Calificacion::updateOrCreate(
                 [
                     'alumno_id' => $data['alumno_id'],
-                    'materia_id' => $this->materia_id,
+                    'materia_id' => $this->selectedMateriaId,
                     'profesor_id' => $profesorId,
-                    'grupo_id' => $this->grupo_id,
+                    'grupo_id' => $this->selectedGroupId,
                     'periodo_escolar_id' => $periodo?->id,
                 ],
                 [
@@ -186,5 +201,55 @@ class CargarCalificaciones extends Page implements HasForms
             ->send();
 
         $this->loadAlumnos();
+    }
+
+    public function getTitle(): string
+    {
+        if ($this->selectedGroupId && $this->selectedMateriaId) {
+            return "Cargar Calificaciones - {$this->selectedGroupName} - {$this->selectedMateriaName}";
+        }
+
+        if ($this->selectedGroupId) {
+            return "Cargar Calificaciones - {$this->selectedGroupName}";
+        }
+
+        return 'Cargar Calificaciones';
+    }
+
+    public function getHeading(): string
+    {
+        if ($this->selectedGroupId && $this->selectedMateriaId) {
+            return "Cargar Calificaciones - {$this->selectedGroupName} - {$this->selectedMateriaName}";
+        }
+
+        if ($this->selectedGroupId) {
+            return "Cargar Calificaciones - {$this->selectedGroupName}";
+        }
+
+        return 'Cargar Calificaciones';
+    }
+
+    private function getGroups(): Collection
+    {
+        return Grupo::query()
+            ->withCount('alumnos')
+            ->where('activo', true)
+            ->whereHas('cargaAcademica', fn (Builder $q) => $q->where('profesor_id', auth()->user()?->profesor?->id))
+            ->orderBy('nombre')
+            ->get();
+    }
+
+    private function getMaterias(): Collection
+    {
+        if (! $this->selectedGroupId) {
+            return collect();
+        }
+
+        return Materia::whereHas('cargaAcademica', function (Builder $q): void {
+            $q->where('profesor_id', auth()->user()?->profesor?->id)
+                ->where('grupo_id', $this->selectedGroupId);
+        })
+            ->orderBy('nombre')
+            ->get();
     }
 }

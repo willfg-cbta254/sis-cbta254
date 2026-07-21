@@ -35,6 +35,8 @@ class HorarioDocentes extends Page implements HasForms
 
     public array $dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
+    protected ?string $pollingInterval = '5s';
+
     public function form(Schema $schema): Schema
     {
         return $schema

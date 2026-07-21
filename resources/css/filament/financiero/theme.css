@@ -1,0 +1,37 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/Financiero/**/*';
+@source '../../../../resources/views/filament/**/*';
+@source '../../../../vendor/jeffgreco13/filament-breezy/resources/**/*';
+
+@theme {
+    --color-primary: #004225;
+}
+
+.fi-topbar {
+    background: linear-gradient(90deg, #00a149 0%, #060a3f 100%);
+}
+
+.fi-logo {
+    @apply text-white;
+}
+
+.fi-topbar-nav-groups {
+    @apply text-white;
+}
+
+.fi-dropdown {
+    @apply bg-slate-50 rounded-lg shadow-md text-slate-50;
+}
+
+.fi-user-menu {
+    @apply bg-white/0 rounded-none shadow-md text-slate-50;
+}
+
+.fi-user-menu button > span {
+    display: none;
+}
+
+.fi-topbar-item {
+    @apply bg-slate-50 rounded-lg shadow-md text-slate-50;
+}

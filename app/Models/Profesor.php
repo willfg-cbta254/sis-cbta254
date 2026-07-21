@@ -25,8 +25,8 @@ class Profesor extends Model
 
     public function materias(): BelongsToMany
     {
-        return $this->belongsToMany(Materia::class, 'materia_profesor')
-            ->withTimestamps();
+        return $this->belongsToMany(Materia::class, 'carga_academica', 'profesor_id', 'materia_id')
+            ->distinct();
     }
 
     public function grupos(): BelongsToMany
@@ -49,5 +49,10 @@ class Profesor extends Model
     public function calificaciones(): HasMany
     {
         return $this->hasMany(Calificacion::class);
+    }
+
+    public function estrategiasDidacticas(): HasMany
+    {
+        return $this->hasMany(EstrategiaDidactica::class);
     }
 }

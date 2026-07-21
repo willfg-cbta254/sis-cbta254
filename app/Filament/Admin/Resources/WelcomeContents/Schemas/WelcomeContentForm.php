@@ -36,6 +36,7 @@ class WelcomeContentForm
                             FileUpload::make('hero_image')
                                 ->label('Imagen de fondo')
                                 ->image()
+                                ->disk('public')
                                 ->maxSize(5120)
                                 ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                                 ->directory('welcome')
@@ -91,6 +92,7 @@ class WelcomeContentForm
                                         FileUpload::make('image')
                                             ->label('Imagen')
                                             ->image()
+                                            ->disk('public')
                                             ->maxSize(5120)
                                             ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                                             ->directory('welcome/gallery'),

@@ -7,7 +7,6 @@ use App\Filament\Alumno\Pages\MisAsistencias;
 use App\Filament\Alumno\Pages\MisCalificaciones;
 use App\Filament\Alumno\Pages\MisHorasLaborSocial;
 use App\Filament\Alumno\Pages\MisMaterias;
-use App\Filament\Alumno\Pages\MisPagos;
 use App\Filament\Alumno\Widgets\AlumnoStatsWidget;
 use Filament\Forms\Components\FileUpload;
 use Filament\Http\Middleware\Authenticate;
@@ -68,7 +67,6 @@ class AlumnoPanelProvider extends PanelProvider
                 MisAsistencias::class,
                 MiHorario::class,
                 MisMaterias::class,
-                MisPagos::class,
                 MisHorasLaborSocial::class,
             ])
             ->widgets([

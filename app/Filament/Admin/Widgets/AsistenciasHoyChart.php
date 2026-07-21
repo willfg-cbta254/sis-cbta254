@@ -7,6 +7,8 @@ use Filament\Widgets\ChartWidget;
 
 class AsistenciasHoyChart extends ChartWidget
 {
+    protected ?string $pollingInterval = '5s';
+
     protected ?string $heading = 'Asistencias del día';
 
     protected function getData(): array

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BoletaController;
+use App\Http\Controllers\EstrategiaDownloadController;
 use App\Http\Controllers\FichaController;
 use App\Http\Controllers\PagoReciboController;
 use Illuminate\Support\Facades\Route;
@@ -18,3 +19,6 @@ Route::get('/fichas/{ficha}/descargar', [FichaController::class, 'download'])->n
 
 Route::get('/pagos/{pago}/recibo', [PagoReciboController::class, 'download'])->middleware('auth')->name('pagos.recibo');
 Route::get('/boletas/{alumno}', [BoletaController::class, 'download'])->middleware('auth')->name('boletas.download');
+
+Route::get('/estrategias/{estrategia}/descargar', [EstrategiaDownloadController::class, 'download'])->middleware('auth')->name('estrategias.download');
+Route::get('/estrategias/{estrategia}/ver', [EstrategiaDownloadController::class, 'stream'])->middleware('auth')->name('estrategias.stream');

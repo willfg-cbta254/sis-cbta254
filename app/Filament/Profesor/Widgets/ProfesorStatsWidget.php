@@ -10,6 +10,8 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class ProfesorStatsWidget extends BaseWidget
 {
+    protected ?string $pollingInterval = '5s';
+
     protected function getStats(): array
     {
         $profesorId = auth()->user()?->profesor?->id;

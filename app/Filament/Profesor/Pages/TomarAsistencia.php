@@ -38,6 +38,8 @@ class TomarAsistencia extends Page implements HasForms
 
     public array $asistencias = [];
 
+    protected ?string $pollingInterval = '5s';
+
     public function mount(): void
     {
         $this->fecha = now()->toDateString();

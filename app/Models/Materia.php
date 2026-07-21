@@ -22,8 +22,8 @@ class Materia extends Model
 
     public function profesores(): BelongsToMany
     {
-        return $this->belongsToMany(Profesor::class, 'materia_profesor')
-            ->withTimestamps();
+        return $this->belongsToMany(Profesor::class, 'carga_academica', 'materia_id', 'profesor_id')
+            ->distinct();
     }
 
     public function grupos(): BelongsToMany

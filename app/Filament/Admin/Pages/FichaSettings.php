@@ -29,6 +29,8 @@ class FichaSettings extends Page
 
     public ?array $data = [];
 
+    protected ?string $pollingInterval = '5s';
+
     public function getView(): string
     {
         return 'filament.admin.pages.ficha-settings';

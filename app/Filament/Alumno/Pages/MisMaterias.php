@@ -20,6 +20,8 @@ class MisMaterias extends Page implements HasTable
 
     protected string $view = 'filament.pages.mis-materias';
 
+    protected ?string $pollingInterval = '5s';
+
     public function table(Table $table): Table
     {
         $alumno = auth()->user()?->alumno;

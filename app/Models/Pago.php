@@ -10,6 +10,7 @@ class Pago extends Model
     protected $fillable = [
         'alumno_id',
         'concepto_pago_id',
+        'periodo_escolar_id',
         'monto',
         'referencia',
         'fecha_pago',
@@ -40,5 +41,10 @@ class Pago extends Model
     public function usuario(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function periodoEscolar(): BelongsTo
+    {
+        return $this->belongsTo(PeriodoEscolar::class);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\PagoResource\Pages;
 use App\Models\ConceptoPago;
 use App\Models\Pago;
+use App\Models\PeriodoEscolar;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -56,6 +57,16 @@ class PagoResource extends Resource
                         $set('monto', null);
                     }
                 }),
+            Select::make('periodo_escolar_id')
+                ->relationship('periodoEscolar', 'clave')
+                ->searchable()
+                ->preload()
+                ->required()
+                ->label('Periodo Escolar')
+                ->default(fn () => PeriodoEscolar::where('activo', true)->first()?->id)
+                ->extraInputAttributes([
+                    'style' => 'width: 200px; padding: 10px; font-size: 1.2rem;',
+                ]),
             TextInput::make('monto')
                 ->required()
                 ->numeric()
@@ -111,6 +122,10 @@ class PagoResource extends Resource
                 TextColumn::make('conceptoPago.nombre')
                     ->badge()
                     ->label('Concepto'),
+                TextColumn::make('periodoEscolar.clave')
+                    ->badge()
+                    ->label('Periodo')
+                    ->toggleable(),
                 TextColumn::make('monto')
                     ->numeric(2)
                     ->sortable()
@@ -148,6 +163,9 @@ class PagoResource extends Resource
                     }),
             ])
             ->filters([
+                SelectFilter::make('periodo_escolar_id')
+                    ->relationship('periodoEscolar', 'clave')
+                    ->label('Periodo'),
                 SelectFilter::make('concepto_pago_id')
                     ->relationship('conceptoPago', 'nombre')
                     ->label('Concepto'),

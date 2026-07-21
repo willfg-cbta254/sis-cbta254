@@ -22,6 +22,7 @@ class GalleryForm
                         FileUpload::make('image')
                             ->label('Imagen')
                             ->image()
+                            ->disk('public')
                             ->required()
                             ->maxSize(10240)
                             ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])

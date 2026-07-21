@@ -1,45 +1,55 @@
 <?php
 
-namespace App\Filament\Alumno\Pages;
+namespace App\Filament\ServiciosEscolares\Resources;
 
+use App\Filament\ServiciosEscolares\Resources\PagoResource\Pages;
 use App\Models\Pago;
 use BackedEnum;
-use Filament\Pages\Page;
+use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Concerns\InteractsWithTable;
-use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
-class MisPagos extends Page implements HasTable
+class PagoResource extends Resource
 {
-    use InteractsWithTable;
-
-    public static function can(): bool
-    {
-        return auth()->user()?->can('ver pagos') ?? false;
-    }
+    protected static ?string $model = Pago::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
 
-    protected static ?string $title = 'Mis Pagos';
+    protected static ?string $modelLabel = 'Pago';
 
-    protected string $view = 'filament.pages.mis-pagos';
+    protected static ?string $pluralModelLabel = 'Pagos';
 
-    public function table(Table $table): Table
+    public static function table(Table $table): Table
     {
         return $table
-            ->query(Pago::where('alumno_id', auth()->user()?->alumno?->id))
             ->columns([
+                TextColumn::make('alumno.matricula')
+                    ->searchable()
+                    ->sortable()
+                    ->label('Matrícula'),
+                TextColumn::make('alumno.user.name')
+                    ->searchable()
+                    ->label('Alumno'),
+                TextColumn::make('conceptoPago.nombre')
+                    ->badge()
+                    ->label('Concepto'),
+                TextColumn::make('periodoEscolar.clave')
+                    ->badge()
+                    ->label('Periodo')
+                    ->toggleable(),
+                TextColumn::make('monto')
+                    ->numeric(2)
+                    ->sortable()
+                    ->prefix('$')
+                    ->weight('bold'),
                 TextColumn::make('referencia')
                     ->searchable()
                     ->label('Referencia'),
-                TextColumn::make('conceptoPago.nombre')
-                    ->label('Concepto'),
-                TextColumn::make('monto')
-                    ->numeric(2)
-                    ->prefix('$')
-                    ->weight('bold'),
+                TextColumn::make('fecha_pago')
+                    ->date()
+                    ->sortable()
+                    ->label('Fecha'),
                 TextColumn::make('metodo_pago')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
@@ -48,11 +58,8 @@ class MisPagos extends Page implements HasTable
                         'tarjeta' => 'Tarjeta',
                         'deposito' => 'Depósito',
                         default => $state,
-                    }),
-                TextColumn::make('fecha_pago')
-                    ->date()
-                    ->sortable()
-                    ->label('Fecha'),
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('estatus')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -68,21 +75,26 @@ class MisPagos extends Page implements HasTable
                     }),
             ])
             ->filters([
+                SelectFilter::make('periodo_escolar_id')
+                    ->relationship('periodoEscolar', 'clave')
+                    ->label('Periodo'),
+                SelectFilter::make('concepto_pago_id')
+                    ->relationship('conceptoPago', 'nombre')
+                    ->label('Concepto'),
                 SelectFilter::make('estatus')
                     ->options([
                         'pagado' => 'Pagado',
                         'pendiente' => 'Pendiente',
                         'cancelado' => 'Cancelado',
                     ]),
-                SelectFilter::make('metodo_pago')
-                    ->options([
-                        'efectivo' => 'Efectivo',
-                        'transferencia' => 'Transferencia',
-                        'tarjeta' => 'Tarjeta',
-                        'deposito' => 'Depósito',
-                    ])
-                    ->label('Método de pago'),
             ])
             ->defaultSort('fecha_pago', 'desc');
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListPagos::route('/'),
+        ];
     }
 }

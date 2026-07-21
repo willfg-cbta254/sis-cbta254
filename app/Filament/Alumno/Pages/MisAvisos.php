@@ -16,6 +16,8 @@ class MisAvisos extends Page
 
     protected string $view = 'filament.pages.mis-avisos';
 
+    protected ?string $pollingInterval = '5s';
+
     public function getViewData(): array
     {
         $alumno = auth()->user()?->alumno;

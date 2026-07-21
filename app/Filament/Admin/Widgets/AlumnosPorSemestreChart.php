@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 
 class AlumnosPorSemestreChart extends ChartWidget
 {
+    protected ?string $pollingInterval = '5s';
+
     protected ?string $heading = 'Alumnos por semestre';
 
     protected function getData(): array

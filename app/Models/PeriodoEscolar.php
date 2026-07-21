@@ -29,4 +29,9 @@ class PeriodoEscolar extends Model
     {
         return $this->hasMany(Calificacion::class);
     }
+
+    public function pagos(): HasMany
+    {
+        return $this->hasMany(Pago::class);
+    }
 }

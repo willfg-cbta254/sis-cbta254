@@ -13,6 +13,8 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class StatsOverviewWidget extends BaseWidget
 {
+    protected ?string $pollingInterval = '5s';
+
     protected function getStats(): array
     {
         $periodoActivo = PeriodoEscolar::where('activo', true)->first();

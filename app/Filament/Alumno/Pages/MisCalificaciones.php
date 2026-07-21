@@ -28,6 +28,8 @@ class MisCalificaciones extends Page implements HasTable
 
     protected string $view = 'filament.pages.mis-calificaciones';
 
+    protected ?string $pollingInterval = '5s';
+
     protected function getHeaderActions(): array
     {
         return [

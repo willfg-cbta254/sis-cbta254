@@ -2,8 +2,11 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Pages\CorteCaja;
+use App\Filament\Admin\Pages\EstrategiasPorDocente;
 use App\Filament\Admin\Widgets\AlumnosPorSemestreChart;
 use App\Filament\Admin\Widgets\AsistenciasHoyChart;
+use App\Filament\Admin\Widgets\PagosCuotaVoluntaria;
 use App\Filament\Admin\Widgets\StatsOverviewWidget;
 use Filament\Forms\Components\FileUpload;
 use Filament\Http\Middleware\Authenticate;
@@ -61,11 +64,16 @@ class AdminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
-            ->pages([Dashboard::class])
+            ->pages([
+                Dashboard::class,
+                CorteCaja::class,
+                EstrategiasPorDocente::class,
+            ])
             ->widgets([
                 AccountWidget::class,
-                FilamentInfoWidget::class,
+                //FilamentInfoWidget::class,
                 StatsOverviewWidget::class,
+                PagosCuotaVoluntaria::class,
                 AsistenciasHoyChart::class,
                 AlumnosPorSemestreChart::class,
             ])

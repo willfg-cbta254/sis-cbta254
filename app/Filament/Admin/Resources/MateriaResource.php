@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Enums\Semestre;
 use App\Enums\TipoMateria;
 use App\Filament\Admin\Resources\MateriaResource\Pages;
+use App\Models\CargaAcademica;
 use App\Models\Materia;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
@@ -17,6 +18,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class MateriaResource extends Resource
@@ -53,6 +55,11 @@ class MateriaResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->addSelect([
+                'profesores_count' => CargaAcademica::query()
+                    ->whereColumn('materia_id', 'materias.id')
+                    ->selectRaw('COUNT(DISTINCT profesor_id)'),
+            ]))
             ->columns([
                 TextColumn::make('clave')->searchable()->sortable(),
                 TextColumn::make('nombre')->searchable()->sortable(),
@@ -62,7 +69,7 @@ class MateriaResource extends Resource
                     ->formatStateUsing(fn (TipoMateria $state): string => $state->value),
                 TextColumn::make('semestre_id')->label('Semestre')->sortable()->badge()->formatStateUsing(fn ($state) => $state?->value ? ucfirst($state->value) : ''),
                 TextColumn::make('horas_semana')->sortable(),
-                TextColumn::make('profesores_count')->counts('profesores')->label('Profesores'),
+                TextColumn::make('profesores_count')->label('Profesores'),
             ])
             ->filters([
                 SelectFilter::make('tipo')->options(array_combine(

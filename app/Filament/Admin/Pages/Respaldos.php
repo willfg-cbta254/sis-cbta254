@@ -27,6 +27,8 @@ class Respaldos extends Page
 
     protected string $view = 'filament.admin.pages.respaldos';
 
+    protected ?string $pollingInterval = '5s';
+
     public static function can(): bool
     {
         return auth()->user()?->can('ver usuarios') ?? false;
