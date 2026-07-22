@@ -82,32 +82,6 @@ class WelcomeContentForm
                                 ->deletable(),
                         ]),
 
-                    Step::make('Galería')
-                        ->description('Imágenes de las instalaciones')
-                        ->schema([
-                            Repeater::make('gallery')
-                                ->label('Imágenes')
-                                ->schema([
-                                    Grid::make(2)->schema([
-                                        FileUpload::make('image')
-                                            ->label('Imagen')
-                                            ->image()
-                                            ->disk('public')
-                                            ->maxSize(5120)
-                                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
-                                            ->directory('welcome/gallery'),
-                                        TextInput::make('label')
-                                            ->label('Etiqueta')
-                                            ->required()
-                                            ->maxLength(255),
-                                    ]),
-                                ])
-                                ->maxItems(20)
-                                ->addable()
-                                ->reorderable()
-                                ->deletable(),
-                        ]),
-
                     Step::make('Convocatorias')
                         ->description('Avisos y convocatorias')
                         ->schema([

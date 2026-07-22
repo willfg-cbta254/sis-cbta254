@@ -71,7 +71,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->widgets([
                 AccountWidget::class,
-                //FilamentInfoWidget::class,
+                // FilamentInfoWidget::class,
                 StatsOverviewWidget::class,
                 PagosCuotaVoluntaria::class,
                 AsistenciasHoyChart::class,

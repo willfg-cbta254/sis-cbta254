@@ -25,6 +25,9 @@ class GalleriesTable
                     ->searchable()
                     ->sortable()
                     ->limit(30),
+                TextColumn::make('periodoEscolar.clave')
+                    ->label('Periodo')
+                    ->sortable(),
                 TextColumn::make('category')
                     ->label('Categoría')
                     ->sortable()
@@ -38,9 +41,6 @@ class GalleriesTable
                     ->boolean()
                     ->sortable()
                     ->label('Activo'),
-                TextColumn::make('sort_order')
-                    ->label('Orden')
-                    ->sortable(),
             ])
             ->filters([])
             ->recordActions([

@@ -1,3 +1,8 @@
+@php
+
+    $fichaOpen = \App\Models\FichaSetting::first()?->is_open ?? false;
+@endphp
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -41,10 +46,15 @@
                 </div>
 
                 <div class="hidden lg:flex items-center gap-3">
-                    <a href="#" class="inline-flex items-center gap-1.5 rounded-lg border border-amber-400/60 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-800 hover:bg-amber-100 transition-colors">
-                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                        Aspirantes / Pre-registro
-                    </a>
+                    @if ($fichaOpen)
+                        <button type="button" onclick="Livewire.dispatch('openFichaModal')"
+                            class="inline-flex items-center gap-1.5 rounded-lg border border-amber-400/60 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-800 hover:bg-amber-100 transition-colors cursor-pointer">
+                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                            Aspirantes / Pre-registro
+                        </button>
+                    @endif
                     @guest
                         <a href="{{ url('/alumnno/login') }}" class="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-green-800 to-blue-900 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:from-green-700 hover:to-blue-800 transition-all">
                             <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" /></svg>
@@ -91,54 +101,58 @@
         </div>
     </section>
 
-    {{-- CATEGORY FILTER --}}
+    {{-- PERIOD / MONTH GROUPED GRID --}}
     @php
-        $categories = $images->pluck('category')->unique()->filter();
-        $currentCategory = request('category');
+        $grouped = $images->groupBy(fn ($item) => $item->periodoEscolar?->clave ?? 'Sin periodo');
+
+        $monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     @endphp
 
-    @if($categories->isNotEmpty())
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-            <div class="flex flex-wrap gap-2 justify-center">
-                <a href="{{ route('blog.gallery') }}"
-                    class="rounded-full px-4 py-2 text-sm font-medium transition-colors @unless($currentCategory) bg-green-800 text-white @else bg-gray-200 text-gray-700 hover:bg-gray-300 @endunless">
-                    Todas
-                </a>
-                @foreach($categories as $cat)
-                    <a href="{{ route('blog.gallery', ['category' => $cat]) }}"
-                        class="rounded-full px-4 py-2 text-sm font-medium transition-colors @if($currentCategory === $cat) bg-green-800 text-white @else bg-gray-200 text-gray-700 hover:bg-gray-300 @endif">
-                        {{ match($cat) { 'instalaciones' => 'Instalaciones', 'eventos' => 'Eventos', 'actividades' => 'Actividades', default => ucfirst($cat) } }}
-                    </a>
-                @endforeach
-            </div>
-        </section>
-    @endif
-
-    {{-- GRID --}}
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
         @if($images->count())
-            <div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
-                @foreach($images as $item)
-                    <div class="break-inside-avoid group relative rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                        onclick="openLightbox('{{ Str::startsWith($item->image, 'http') ? $item->image : asset('storage/' . $item->image) }}', '{{ $item->title ?? '' }}')">
-                        <img src="{{ Str::startsWith($item->image, 'http') ? $item->image : asset('storage/' . $item->image) }}"
-                            alt="{{ $item->title ?? 'Galería CBTA 254' }}"
-                            class="w-full object-cover group-hover:scale-105 transition-transform duration-700">
-                        @if($item->title || $item->description)
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                                <div class="absolute bottom-0 left-0 right-0 p-4">
-                                    @if($item->title)
-                                        <h3 class="text-sm font-bold text-white">{{ $item->title }}</h3>
-                                    @endif
-                                    @if($item->description)
-                                        <p class="text-xs text-white/80 mt-1">{{ $item->description }}</p>
-                                    @endif
-                                </div>
+            @foreach($grouped as $periodoClave => $periodImages)
+                @php
+                    $byMonth = $periodImages->groupBy(fn ($item) => $item->created_at->format('Y-m'));
+                @endphp
+
+                <div class="mb-12 last:mb-0">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ $periodoClave }}</h2>
+
+                    @foreach($byMonth as $monthKey => $monthImages)
+                        @php
+                            [$year, $month] = explode('-', $monthKey);
+                            $monthLabel = $monthNames[(int) $month - 1] . ' ' . $year;
+                        @endphp
+
+                        <div class="mb-8 last:mb-0">
+                            <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">{{ $monthLabel }}</h3>
+
+                            <div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-2 space-y-2">
+                                @foreach($monthImages as $item)
+                                    <div class="break-inside-avoid group relative rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                                        onclick="openLightbox('{{ Str::startsWith($item->image, 'http') ? $item->image : asset('storage/' . $item->image) }}', '{{ $item->title ?? '' }}')">
+                                        <img src="{{ Str::startsWith($item->image, 'http') ? $item->image : asset('storage/' . $item->image) }}"
+                                            alt="{{ $item->title ?? 'Galería CBTA 254' }}"
+                                            class="w-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                        @if($item->title || $item->description)
+                                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <div class="absolute bottom-0 left-0 right-0 p-4">
+                                                    @if($item->title)
+                                                        <h3 class="text-sm font-bold text-white">{{ $item->title }}</h3>
+                                                    @endif
+                                                    @if($item->description)
+                                                        <p class="text-xs text-white/80 mt-1">{{ $item->description }}</p>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endforeach
                             </div>
-                        @endif
-                    </div>
-                @endforeach
-            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endforeach
 
             <div class="mt-10">
                 {{ $images->links() }}

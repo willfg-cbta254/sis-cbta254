@@ -1,6 +1,12 @@
 @php
     $welcome = \App\Models\WelcomeContent::first();
-    $galleryImages = \App\Models\Gallery::where('is_active', true)->orderBy('sort_order')->limit(6)->get();
+
+    $galleryImages = \App\Models\Gallery::where('is_active', true)
+        ->whereNotNull('image')
+        ->latest()
+        ->limit(6)
+        ->get();
+
     $communityAnnouncements = \App\Models\Announcement::published()->where('type', 'community')->orderBy('published_at', 'desc')->limit(6)->get();
     $fichaOpen = \App\Models\FichaSetting::first()?->is_open ?? false;
 @endphp
@@ -22,7 +28,7 @@
         }
 
         .hero-gradient {
-            background: linear-gradient(135deg, rgba(13, 79, 59, 0.92) 0%, rgba(30, 58, 95, 0.88) 100%);
+            background: linear-gradient(135deg, rgba(13, 79, 41, 0.92) 0%, rgba(30, 58, 95, 0.88) 80%);
         }
 
         [x-cloak] {
@@ -49,9 +55,9 @@
                         CBTA
                     </div>
                     <div class="hidden sm:block">
-                        <span class="text-sm font-bold text-gray-900 group-hover:text-green-800 transition-colors">CBTA
+                        <span class="text-sm font-bold text-gray-900 group-hover:text-green-800 transition-colors">CBTA No.
                             254</span>
-                        <span class="block text-[10px] leading-tight text-gray-500">Educación Media Superior</span>
+                        <span class="block text-[10px] leading-tight text-gray-500">Centro de Bachillerato Tecnológico Agropecuario No. 254</span>
                     </div>
                 </a>
 
@@ -309,10 +315,10 @@
             <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
                 <span
                     class="inline-block rounded-full bg-blue-100 px-4 py-1.5 text-xs font-semibold text-blue-800 mb-3">
-                    Nuestras Instalaciones
+                    Conoce el CBTA 254
                 </span>
                 <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
-                    Conoce el CBTA 254
+                    GALERÍA
                 </h2>
                 <p class="mt-3 text-gray-500 leading-relaxed">
                     Espacios dise&ntilde;ados para el aprendizaje te&oacute;rico y pr&aacute;ctico de nuestros
@@ -320,9 +326,9 @@
                 </p>
             </div>
 
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-0">
                 @foreach($galleryImages as $item)
-                    <div class="relative group overflow-hidden rounded-2xl aspect-[4/3] cursor-pointer"
+                    <div class="relative group overflow-hidden  aspect-[4/3] cursor-pointer "
                         onclick="openLightbox('{{ Str::startsWith($item->image, 'http') ? $item->image : asset('storage/' . $item->image) }}', '{{ $item->title ?? '' }}')">
                         <img src="{{ Str::startsWith($item->image, 'http') ? $item->image : asset('storage/' . $item->image) }}"
                             alt="{{ $item->title ?? '' }}"
@@ -542,7 +548,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                             </svg>
-                            {{ $welcome?->contact_address ?? 'Carretera Federal México 15, Km. 178, S/N, 63470' }}
+                            {{ $welcome?->contact_address ?? 'Km. 26.5 Carretera Federal Tecamachalco - Cañada Morelos'}}
                         </li>
                         <li class="flex items-center gap-2.5 text-sm text-gray-400">
                             <svg class="size-4 shrink-0 text-amber-400" fill="none" viewBox="0 0 24 24"
@@ -558,7 +564,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
                             </svg>
-                            {{ $welcome?->contact_phone ?? '+52 (123) 456 7890' }}
+                            {{ $welcome?->contact_phone ?? '+52 (249) 154 5238' }}
                         </li>
                     </ul>
 

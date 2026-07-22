@@ -28,9 +28,10 @@ class BlogController extends Controller
     public function gallery()
     {
         $images = Gallery::where('is_active', true)
-            ->orderBy('sort_order')
-            ->orderBy('created_at', 'desc')
-            ->paginate(24);
+            ->whereNotNull('image')
+            ->with('periodoEscolar')
+            ->latest()
+            ->paginate(15);
 
         return view('blog.gallery', compact('images'));
     }

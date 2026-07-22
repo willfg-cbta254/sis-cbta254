@@ -36,10 +36,13 @@ class GalleryForm
                             ->maxLength(500)
                             ->columnSpanFull(),
                     ]),
-
                 Section::make('Configuración')
                     ->columns(2)
                     ->schema([
+                        Select::make('periodo_escolar_id')
+                            ->label('Periodo Escolar')
+                            ->relationship('periodoEscolar', 'clave')
+                            ->required(),
                         Select::make('category')
                             ->label('Categoría')
                             ->options([
@@ -49,10 +52,6 @@ class GalleryForm
                                 'otras' => 'Otras',
                             ])
                             ->placeholder('Seleccionar categoría'),
-                        TextInput::make('sort_order')
-                            ->label('Orden')
-                            ->numeric()
-                            ->default(0),
                         Toggle::make('is_active')
                             ->label('Activo')
                             ->default(true),

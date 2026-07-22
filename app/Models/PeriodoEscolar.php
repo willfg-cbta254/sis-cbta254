@@ -34,4 +34,9 @@ class PeriodoEscolar extends Model
     {
         return $this->hasMany(Pago::class);
     }
+
+    public function galleries(): HasMany
+    {
+        return $this->hasMany(Gallery::class);
+    }
 }
