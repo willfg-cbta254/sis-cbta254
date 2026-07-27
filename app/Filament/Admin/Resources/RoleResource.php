@@ -36,7 +36,6 @@ class RoleResource extends Resource
         return [
             'Periodos Escolares' => 'periodos',
             'Generaciones' => 'generaciones',
-
             'Carreras' => 'carreras',
             'Materias' => 'materias',
             'Grupos' => 'grupos',
@@ -52,6 +51,8 @@ class RoleResource extends Resource
             'Conceptos de Pago' => 'conceptos_pago',
             'Pagos' => 'pagos',
             'Horarios' => 'horarios',
+            'Carga Académica' => 'cargas academicas',
+            'Estrategias Didácticas' => 'estrategias didacticas',
         ];
     }
 

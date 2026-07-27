@@ -62,7 +62,7 @@ return [
             'dump' => [
                 'dump_binary_path' => 'C:\wamp64\bin\mysql\mysql8.4.7\bin',
                 'use_single_transaction' => true,
-                'timeout' => 60 * 5,
+                'timeout' => 0,
                 'skip_ssl' => true,
                 'add_extra_option' => '--protocol=TCP',
             ],

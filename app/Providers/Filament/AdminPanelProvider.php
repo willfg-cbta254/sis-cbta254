@@ -6,6 +6,7 @@ use App\Filament\Admin\Pages\CorteCaja;
 use App\Filament\Admin\Pages\EstrategiasPorDocente;
 use App\Filament\Admin\Widgets\AlumnosPorSemestreChart;
 use App\Filament\Admin\Widgets\AsistenciasHoyChart;
+use App\Filament\Admin\Widgets\CalificacionesPorMateriaChart;
 use App\Filament\Admin\Widgets\PagosCuotaVoluntaria;
 use App\Filament\Admin\Widgets\StatsOverviewWidget;
 use Filament\Forms\Components\FileUpload;
@@ -70,12 +71,13 @@ class AdminPanelProvider extends PanelProvider
                 EstrategiasPorDocente::class,
             ])
             ->widgets([
-                AccountWidget::class,
+                // AccountWidget::class,
                 // FilamentInfoWidget::class,
                 StatsOverviewWidget::class,
                 PagosCuotaVoluntaria::class,
                 AsistenciasHoyChart::class,
                 AlumnosPorSemestreChart::class,
+                CalificacionesPorMateriaChart::class,
             ])
             ->middleware([
                 EncryptCookies::class, AddQueuedCookiesToResponse::class, StartSession::class,

@@ -20,66 +20,53 @@ class WelcomeContentForm
             ->components([
                 Wizard::make([
                     Step::make('Hero')
-                        ->description('Sección principal de la portada')
+                        ->description('Diapositivas del carrusel principal')
                         ->schema([
-                            TextInput::make('hero_badge')
-                                ->label('Etiqueta / Badge')
-                                ->maxLength(255),
-                            TextInput::make('hero_title')
-                                ->label('Título principal')
-                                ->maxLength(255)
-                                ->columnSpanFull(),
-                            Textarea::make('hero_description')
-                                ->label('Descripción')
-                                ->maxLength(1000)
-                                ->columnSpanFull(),
-                            FileUpload::make('hero_image')
-                                ->label('Imagen de fondo')
-                                ->image()
-                                ->disk('public')
-                                ->maxSize(5120)
-                                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
-                                ->directory('welcome')
-                                ->columnSpanFull(),
-                            TextInput::make('hero_btn_text')
-                                ->label('Texto botón principal')
-                                ->maxLength(255),
-                            TextInput::make('hero_btn_secondary_text')
-                                ->label('Texto botón secundario')
-                                ->maxLength(255),
-                        ]),
-
-                    Step::make('Carreras')
-                        ->description('Tarjetas de oferta educativa')
-                        ->schema([
-                            Repeater::make('careers')
-                                ->label('Carreras')
+                            Repeater::make('hero_slides')
+                                ->label('Diapositivas')
                                 ->schema([
                                     Grid::make(2)->schema([
+                                        TextInput::make('badge')
+                                            ->label('Etiqueta / Badge')
+                                            ->maxLength(255),
                                         TextInput::make('title')
                                             ->label('Título')
-                                            ->required()
-                                            ->maxLength(255),
-                                        Select::make('color')
-                                            ->label('Color')
-                                            ->options([
-                                                'green' => 'Verde',
-                                                'blue' => 'Azul',
-                                                'amber' => 'Ámbar',
-                                            ])
-                                            ->required(),
+                                            ->maxLength(255)
+                                            ->columnSpanFull(),
                                         Textarea::make('description')
                                             ->label('Descripción')
-                                            ->required()
-                                            ->maxLength(500),
+                                            ->maxLength(1000)
+                                            ->columnSpanFull(),
+                                        FileUpload::make('image')
+                                            ->label('Imagen de fondo')
+                                            ->image()
+                                            ->disk('public')
+                                            ->maxSize(5120)
+                                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                                            ->directory('welcome')
+                                            ->columnSpanFull(),
+                                        FileUpload::make('video')
+                                            ->label('Video de fondo')
+                                            ->disk('public')
+                                            ->maxSize(102400)
+                                            ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/ogg'])
+                                            ->directory('welcome')
+                                            ->columnSpanFull(),
+                                        TextInput::make('btn_text')
+                                            ->label('Texto botón principal')
+                                            ->maxLength(255),
+                                        TextInput::make('btn_secondary_text')
+                                            ->label('Texto botón secundario')
+                                            ->maxLength(255),
                                     ]),
                                 ])
-                                ->defaultItems(4)
-                                ->minItems(1)
+                                ->defaultItems(1)
+                                ->minItems(0)
                                 ->maxItems(10)
                                 ->addable()
                                 ->reorderable()
-                                ->deletable(),
+                                ->deletable()
+                                ->columnSpanFull(),
                         ]),
 
                     Step::make('Convocatorias')
@@ -112,8 +99,8 @@ class WelcomeContentForm
                                             ->maxLength(1000),
                                     ]),
                                 ])
-                                ->defaultItems(3)
-                                ->minItems(1)
+                                ->defaultItems(0)
+                                ->minItems(0)
                                 ->maxItems(10)
                                 ->addable()
                                 ->reorderable()

@@ -15,6 +15,7 @@ class WelcomeContent extends Model
         'hero_image',
         'hero_btn_text',
         'hero_btn_secondary_text',
+        'hero_slides',
         'meta_title',
         'meta_description',
         'careers',
@@ -29,6 +30,7 @@ class WelcomeContent extends Model
     protected function casts(): array
     {
         return [
+            'hero_slides' => 'array',
             'careers' => 'array',
             'gallery' => 'array',
             'announcements' => 'array',
