@@ -24,7 +24,7 @@
             <div>
                 <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-3">Institución</h4>
                 <ul class="space-y-2.5">
-                    <li><a href="#"
+                    <li><a href="{{ url('/#filosofia') }}"
                             class="text-sm text-gray-400 hover:text-white transition-colors">Misión y Visión</a></li>
                     <li><a href="#"
                             class="text-sm text-gray-400 hover:text-white transition-colors">Directorio</a></li>

@@ -92,6 +92,8 @@ class ProfesorImporter extends Importer
             ]);
         }
 
+        $user->assignRole('Profesor');
+
         $profesor = Profesor::firstOrNew(['user_id' => $user->id]);
 
         return $profesor;

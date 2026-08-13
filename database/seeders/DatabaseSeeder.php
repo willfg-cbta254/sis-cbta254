@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('admin123'),
             ]
         );
-        $adminUser->assignRole('Administrador');
+        $adminUser->assignRole(['Administrador', config('filament-shield.super_admin.name')]);
 
         // ========== CARRERAS ==========
         $carreras = [

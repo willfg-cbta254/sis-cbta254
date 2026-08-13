@@ -3,6 +3,7 @@
 @source '../../../../app/Filament/Profesor/**/*';
 @source '../../../../resources/views/filament/**/*';
 @source '../../../../vendor/jeffgreco13/filament-breezy/resources/**/*';
+@source '../../../../vendor/diogogpinto/filament-auth-ui-enhancer/resources/**/*.blade.php';
 
 @theme {
     --color-primary: #004225;

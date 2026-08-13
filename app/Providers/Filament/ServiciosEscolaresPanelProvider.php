@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
 use Filament\Forms\Components\FileUpload;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -38,6 +39,12 @@ class ServiciosEscolaresPanelProvider extends PanelProvider
             ->passwordReset()
             ->sidebarWidth('15rem')
             ->plugins([
+                AuthUIEnhancerPlugin::make()
+                    ->formPanelPosition('left')
+                    ->formPanelWidth('45%')
+                    ->emptyPanelBackgroundImageUrl(asset('images/ControlEscolar.jpg'))
+                    ->emptyPanelBackgroundImageOpacity('50%')
+                    ->showEmptyPanelOnMobile(false),
                 BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true,

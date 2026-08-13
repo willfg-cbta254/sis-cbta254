@@ -2,8 +2,8 @@
     $welcome = \App\Models\WelcomeContent::first();
 
     $slides = $welcome?->hero_slides ?? [];
-    if (empty($slides) && $welcome?->hero_title) {
-        $slides = [[
+    if (empty($slides)) {
+        $slides = $welcome?->hero_title ? [[
             'badge' => $welcome->hero_badge,
             'title' => $welcome->hero_title,
             'description' => $welcome->hero_description,
@@ -11,6 +11,14 @@
             'video' => null,
             'btn_text' => $welcome->hero_btn_text,
             'btn_secondary_text' => $welcome->hero_btn_secondary_text,
+        ]] : [[
+            'badge' => 'Educación Media Superior — Modalidad Presencial',
+            'title' => 'CBTA No. 254: Por Una Educación, Científica y Crítica',
+            'description' => 'Formamos técnicos competentes con valores, capaces de enfrentar los retos del sector agropecuario y de la sociedad mexicana del siglo XXI.',
+            'image' => 'https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=2072&auto=format&fit=crop',
+            'video' => null,
+            'btn_text' => 'Conocer Oferta Educativa',
+            'btn_secondary_text' => 'Ver Convocatorias',
         ]];
     }
 
@@ -95,6 +103,89 @@
         </template>
     </section>
 
+    {{-- FILOSOFÍA INSTITUCIONAL --}}
+    <section id="filosofia" class="py-10 sm:py-12 lg:py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+                <span class="inline-block rounded-full bg-green-100 px-4 py-1.5 text-xs font-semibold text-green-800 mb-3">
+                    Nuestra Institución
+                </span>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+                    Filosofía Institucional
+                </h2>
+                <p class="mt-3 text-gray-500 leading-relaxed">
+                    Los principios que guían nuestra labor educativa diaria.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-5 lg:gap-6">
+                {{-- Misión --}}
+                <div class="rounded-2xl bg-gradient-to-br from-green-800 to-blue-900 p-6 sm:p-8 text-white shadow-lg">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="size-10 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold">Misión</h3>
+                    </div>
+                    <p class="text-sm text-justify sm:text-base text-white/85 leading-relaxed">
+                        Formar técnicos bachilleres competentes e íntegros, mediante una educación científica, crítica y
+                        humanista, capaces de enfrentar los retos del sector agropecuario y contribuir al desarrollo
+                        sustentable de su comunidad y del país.
+                    </p>
+                </div>
+
+                {{-- Visión --}}
+                <div class="rounded-2xl bg-white border border-gray-200 p-6 sm:p-8 shadow-sm">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="size-10 rounded-lg bg-amber-100 flex items-center justify-center shrink-0 text-amber-800">
+                            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">Visión</h3>
+                    </div>
+                    <p class="text-sm text-justify sm:text-base text-gray-600 leading-relaxed">
+                        Ser una institución educativa líder en el nivel medio superior, reconocida por la calidad y
+                        pertinencia de su oferta educativa, la formación de egresados emprendedores y responsables con su
+                        entorno, y la mejora continua de sus procesos académicos y tecnológicos.
+                    </p>
+                </div>
+            </div>
+
+            @php
+                $valores = [
+                    ['nombre' => 'Responsabilidad', 'color' => 'bg-green-100 text-green-700'],
+                    ['nombre' => 'Respeto', 'color' => 'bg-blue-100 text-blue-700'],
+                    ['nombre' => 'Honestidad', 'color' => 'bg-amber-100 text-amber-700'],
+                    ['nombre' => 'Solidaridad', 'color' => 'bg-rose-100 text-rose-700'],
+                    ['nombre' => 'Trabajo en Equipo', 'color' => 'bg-violet-100 text-violet-700'],
+                    ['nombre' => 'Compromiso', 'color' => 'bg-cyan-100 text-cyan-700'],
+                ];
+            @endphp
+
+            <div class="mt-8 sm:mt-10">
+                <h4 class="text-center text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 sm:mb-5">Valores</h4>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                    @foreach($valores as $valor)
+                        <div class="flex flex-col items-center gap-2 rounded-xl bg-gray-50 border border-gray-100 p-4 text-center">
+                            <span class="size-8 rounded-full {{ $valor['color'] }} flex items-center justify-center shrink-0">
+                                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                                </svg>
+                            </span>
+                            <span class="text-xs font-semibold text-gray-700">{{ $valor['nombre'] }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </section>
+
     @php
         $fallbackSlide = $slides[0] ?? null;
     @endphp
@@ -176,7 +267,7 @@
                                 </svg>
                             </div>
                             <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $career['title'] }}</h3>
-                            <p class="text-sm text-gray-500 leading-relaxed">{{ $career['description'] }}</p>
+                            <p class="text-sm text-justify text-gray-500 leading-relaxed">{{ $career['description'] }}</p>
                         </div>
                     </div>
                 @endforeach

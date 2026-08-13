@@ -9,6 +9,8 @@ use App\Filament\Admin\Widgets\AsistenciasHoyChart;
 use App\Filament\Admin\Widgets\CalificacionesPorMateriaChart;
 use App\Filament\Admin\Widgets\PagosCuotaVoluntaria;
 use App\Filament\Admin\Widgets\StatsOverviewWidget;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
 use Filament\Forms\Components\FileUpload;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -44,9 +46,17 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => '#004225',
             ])
             ->sidebarWidth('15rem')
+            ->globalSearch(false)
             ->passwordReset()
             ->emailVerification()
+            ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->plugins([
+                AuthUIEnhancerPlugin::make()
+                    ->formPanelPosition('left')
+                    ->formPanelWidth('45%')
+                    ->emptyPanelBackgroundImageUrl(asset('images/admin.jpg'))
+                    ->emptyPanelBackgroundImageOpacity('60%')
+                    ->showEmptyPanelOnMobile(false),
                 BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true,
@@ -61,8 +71,8 @@ class AdminPanelProvider extends PanelProvider
                     )
                     ->enableSanctumTokens()
                     ->enableBrowserSessions(),
+                FilamentShieldPlugin::make(),
             ])
-            ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->pages([

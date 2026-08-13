@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Financiero\Widgets\PagosCuotaVoluntaria;
+use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
 use Filament\Forms\Components\FileUpload;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -39,6 +40,12 @@ class FinancieroPanelProvider extends PanelProvider
             ->passwordReset()
             ->topNavigation()
             ->plugins([
+                AuthUIEnhancerPlugin::make()
+                    ->formPanelPosition('left')
+                    ->formPanelWidth('45%')
+                    ->emptyPanelBackgroundImageUrl(asset('images/Financieros.jpg'))
+                    ->emptyPanelBackgroundImageOpacity('50%')
+                    ->showEmptyPanelOnMobile(false),
                 BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true,

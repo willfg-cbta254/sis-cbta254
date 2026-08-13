@@ -44,20 +44,6 @@ class WelcomeContentSeeder extends Seeder
                     'color' => 'green',
                 ],
             ],
-            'gallery' => [
-                [
-                    'image' => 'https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=1786&auto=format&fit=crop',
-                    'label' => 'Aulas Modernas',
-                ],
-                [
-                    'image' => 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?q=80&w=1887&auto=format&fit=crop',
-                    'label' => 'Talleres Agropecuarios',
-                ],
-                [
-                    'image' => 'https://images.unsplash.com/photo-1523050854058-8df90110c7f1?q=80&w=2070&auto=format&fit=crop',
-                    'label' => 'Laboratorios de Cómputo',
-                ],
-            ],
             'announcements' => [
                 [
                     'badge' => 'Inscripciones',
