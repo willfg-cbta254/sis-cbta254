@@ -2,10 +2,12 @@
 
 namespace App\Filament\ServiciosEscolares\Resources\CargaAcademicaResource\Pages;
 
+use App\Filament\Imports\CargaAcademicaImporter;
 use App\Filament\ServiciosEscolares\Resources\CargaAcademicaResource;
 use App\Models\Grupo;
 use App\Models\PeriodoEscolar;
 use Filament\Actions\CreateAction;
+use Filament\Actions\ImportAction;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
@@ -26,18 +28,24 @@ class ListCargaAcademicas extends ListRecords
 
     protected function getHeaderActions(): array
     {
+        $actions = [
+            ImportAction::make()
+                ->importer(CargaAcademicaImporter::class)
+                ->label('Importar CSV')
+                ->icon('heroicon-o-arrow-up-tray')
+                ->color('success'),
+        ];
+
         if ($this->selectedGroupId && $this->selectedPeriodoId) {
-            return [
-                CreateAction::make()
-                    ->mutateFormDataUsing(fn (array $data): array => [
-                        ...$data,
-                        'grupo_id' => $this->selectedGroupId,
-                        'periodo_escolar_id' => $this->selectedPeriodoId,
-                    ]),
-            ];
+            $actions[] = CreateAction::make()
+                ->mutateFormDataUsing(fn (array $data): array => [
+                    ...$data,
+                    'grupo_id' => $this->selectedGroupId,
+                    'periodo_escolar_id' => $this->selectedPeriodoId,
+                ]);
         }
 
-        return [];
+        return $actions;
     }
 
     public function selectPeriodo(int $periodoId): void

@@ -67,6 +67,8 @@ class GrupoResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->sortable(),
                 TextColumn::make('nombre')
                     ->searchable()
                     ->badge()

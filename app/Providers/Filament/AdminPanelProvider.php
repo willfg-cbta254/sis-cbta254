@@ -53,9 +53,10 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 AuthUIEnhancerPlugin::make()
                     ->formPanelPosition('left')
-                    ->formPanelWidth('45%')
+                    ->formPanelWidth('46%')
                     ->emptyPanelBackgroundImageUrl(asset('images/admin.jpg'))
-                    ->emptyPanelBackgroundImageOpacity('60%')
+                    ->emptyPanelBackgroundImageOpacity('0%')
+                    ->emptyPanelView('filament.admin.auth.empty-panel')
                     ->showEmptyPanelOnMobile(false),
                 BreezyCore::make()
                     ->myProfile(

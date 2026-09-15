@@ -17,6 +17,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -36,31 +37,117 @@ class AlumnoResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Alumnos';
 
+    protected static ?string $recordTitleAttribute = 'matricula';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'success';
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Datos del usuario')->schema([
-                TextInput::make('user.name')->required()->maxLength(255)->label('Nombre completo'),
-                TextInput::make('user.email')->required()->email()->rule(fn ($component) => Rule::unique('users', 'email')->ignore($component->getRecord()?->user?->id)),
-                TextInput::make('user.password')
-                    ->password()->revealable()
-                    ->dehydrated(fn ($state): bool => filled($state))
-                    ->required(fn (string $context): bool => $context === 'create')
-                    ->label('Contraseña'),
-                TextInput::make('user.curp')->required()->maxLength(18)->rule(fn ($component) => Rule::unique('users', 'curp')->ignore($component->getRecord()?->user?->id)),
-                TextInput::make('user.telefono')->tel()->maxLength(15),
-                DatePicker::make('user.fecha_nacimiento')->required(),
-                Textarea::make('user.direccion')->columnSpanFull(),
-            ])->columns(2),
-            Section::make('Datos escolares')->schema([
-                TextInput::make('matricula')->required()->unique(ignoreRecord: true)->maxLength(20),
-                Select::make('generacion_id')->relationship('generacion', 'clave')->required(),
-                Select::make('carrera_id')->relationship('carrera', 'nombre')->required(),
-                Select::make('semestre_actual_id')
-                    ->options(Semestre::class)
-                    ->label('Semestre')->required(),
-                DatePicker::make('fecha_ingreso')->required(),
-            ])->columns(2),
+            Section::make('Identidad del estudiante')
+                ->description('Datos personales vinculados al usuario del sistema')
+                ->icon(Heroicon::OutlinedUserCircle)
+                ->columns(2)
+                ->schema([
+                    TextInput::make('user.name')
+                        ->label('Nombre completo')
+                        ->required()
+                        ->maxLength(255)
+                        ->prefixIcon(Heroicon::OutlinedUser)
+                        ->placeholder('Ej. Juan Pérez Hernández'),
+                    TextInput::make('user.email')
+                        ->label('Correo electrónico')
+                        ->required()
+                        ->email()
+                        ->prefixIcon(Heroicon::OutlinedEnvelope)
+                        ->placeholder('alumno@cbta254.edu.mx')
+                        ->rule(fn ($component) => Rule::unique('users', 'email')->ignore($component->getRecord()?->user?->id)),
+                    TextInput::make('user.password')
+                        ->label('Contraseña')
+                        ->password()
+                        ->revealable()
+                        ->prefixIcon(Heroicon::OutlinedKey)
+                        ->dehydrated(fn ($state): bool => filled($state))
+                        ->required(fn (string $context): bool => $context === 'create')
+                        ->helperText(fn (string $context): ?string => $context === 'edit' ? 'Déjalo vacío para conservar la actual' : null),
+                    TextInput::make('user.curp')
+                        ->label('CURP')
+                        ->required()
+                        ->maxLength(18)
+                        ->prefixIcon(Heroicon::OutlinedIdentification)
+                        ->placeholder('18 caracteres')
+                        ->rule(fn ($component) => Rule::unique('users', 'curp')->ignore($component->getRecord()?->user?->id))
+                        ->extraInputAttributes(['style' => 'text-transform:uppercase'])
+                        ->formatStateUsing(fn ($state) => $state ? mb_strtoupper((string) $state) : $state),
+                    TextInput::make('user.telefono')
+                        ->label('Teléfono')
+                        ->tel()
+                        ->maxLength(15)
+                        ->prefixIcon(Heroicon::OutlinedPhone)
+                        ->placeholder('741 123 4567'),
+                    DatePicker::make('user.fecha_nacimiento')
+                        ->label('Fecha de nacimiento')
+                        ->required()
+                        ->native(false)
+                        ->prefixIcon(Heroicon::OutlinedCalendarDays)
+                        ->displayFormat('d/m/Y'),
+                    Textarea::make('user.direccion')
+                        ->label('Dirección')
+                        ->rows(2)
+                        ->placeholder('Calle, colonia, municipio...')
+                        ->columnSpanFull(),
+                ]),
+
+            Section::make('Trayectoria académica')
+                ->description('Matrícula y ubicación curricular del alumno')
+                ->icon(Heroicon::OutlinedAcademicCap)
+                ->columns(2)
+                ->schema([
+                    TextInput::make('matricula')
+                        ->label('Matrícula')
+                        ->required()
+                        ->unique(ignoreRecord: true)
+                        ->maxLength(20)
+                        ->prefixIcon(Heroicon::OutlinedHashtag)
+                        ->placeholder('Ej. 2024-0015'),
+                    Select::make('generacion_id')
+                        ->label('Generación')
+                        ->relationship('generacion', 'clave')
+                        ->searchable()
+                        ->preload()
+                        ->native(false)
+                        ->required()
+                        ->prefixIcon(Heroicon::OutlinedCalendar),
+                    Select::make('carrera_id')
+                        ->label('Carrera')
+                        ->relationship('carrera', 'nombre')
+                        ->searchable()
+                        ->preload()
+                        ->native(false)
+                        ->required()
+                        ->prefixIcon(Heroicon::OutlinedBriefcase),
+                    Select::make('semestre_actual_id')
+                        ->label('Semestre')
+                        ->options(Semestre::class)
+                        ->native(false)
+                        ->required()
+                        ->prefixIcon(Heroicon::OutlinedChartBar),
+                    DatePicker::make('fecha_ingreso')
+                        ->label('Fecha de ingreso')
+                        ->required()
+                        ->native(false)
+                        ->prefixIcon(Heroicon::OutlinedCalendarDays)
+                        ->displayFormat('d/m/Y')
+                        ->default(now()),
+                ]),
         ]);
     }
 
@@ -68,36 +155,126 @@ class AlumnoResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('matricula')->sortable()->copyable(),
-                TextColumn::make('user.name')->sortable()->label('Nombre'),
-                TextColumn::make('user.curp')->label('CURP')->toggleable(),
-                TextColumn::make('carrera.nombre')->badge()->sortable(),
-                TextColumn::make('semestre_actual_id')->badge()->label('Semestre')->sortable()->formatStateUsing(fn ($state) => $state?->value ? ucfirst($state->value) : ''),
-                TextColumn::make('generacion.clave')->badge()->toggleable(),
-                TextColumn::make('created_at')->dateTime()->toggleable()->sortable(),
+                TextColumn::make('matricula')
+                    ->label('Matrícula')
+                    ->searchable()
+                    ->sortable()
+                    ->copyable()
+                    ->copyMessage('Copiado')
+                    ->weight('bold')
+                    ->icon(Heroicon::OutlinedHashtag)
+                    ->iconColor('gray'),
+                TextColumn::make('user.name')
+                    ->label('Alumno')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('medium')
+                    ->description(fn (Alumno $record): ?string => $record->user?->email)
+                    ->icon(Heroicon::OutlinedUser)
+                    ->wrap(),
+                TextColumn::make('user.curp')
+                    ->label('CURP')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->copyable()
+                    ->fontFamily('mono')
+                    ->searchable(),
+                TextColumn::make('carrera.nombre')
+                    ->label('Carrera')
+                    ->badge()
+                    ->color('info')
+                    ->icon(Heroicon::OutlinedBriefcase)
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('semestre_actual_id')
+                    ->label('Semestre')
+                    ->badge()
+                    ->sortable()
+                    ->color(fn ($state): string => match ($state?->value) {
+                        'Primero', 'Segundo' => 'success',
+                        'Tercero', 'Cuarto' => 'warning',
+                        'Quinto', 'Sexto' => 'danger',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn ($state) => $state?->value ? ucfirst($state->value) : '—')
+                    ->icon(Heroicon::OutlinedChartBar),
+                TextColumn::make('generacion.clave')
+                    ->label('Gen.')
+                    ->badge()
+                    ->color('gray')
+                    ->icon(Heroicon::OutlinedCalendar)
+                    ->toggleable()
+                    ->sortable(),
+                TextColumn::make('grupos.nombre')
+                    ->label('Grupo')
+                    ->badge()
+                    ->color('primary')
+                    ->icon(Heroicon::OutlinedUsers)
+                    ->listWithLineBreaks()
+                    ->limitList(2)
+                    ->expandableLimitedList()
+                    ->toggleable(),
+                TextColumn::make('fecha_ingreso')
+                    ->label('Ingreso')
+                    ->date('d/m/Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->icon(Heroicon::OutlinedCalendarDays),
+                TextColumn::make('created_at')
+                    ->label('Alta')
+                    ->dateTime('d/m/Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->searchable()
+            ->searchPlaceholder('Buscar por matrícula, nombre o CURP…')
             ->searchUsing(fn (Builder $query, string $search): Builder => $query
                 ->where('matricula', 'like', "%{$search}%")
                 ->orWhereHas('user', fn (Builder $q) => $q
                     ->where('name', 'like', "%{$search}%")
                     ->orWhere('curp', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
                 ))
+            ->defaultSort('created_at', 'desc')
+            ->striped()
+            ->paginated([10, 25, 50])
+            ->emptyStateHeading('Sin alumnos registrados')
+            ->emptyStateDescription('Crea el primer expediente o importa desde CSV.')
+            ->emptyStateIcon(Heroicon::OutlinedUserGroup)
             ->filters([
-                SelectFilter::make('carrera_id')->relationship('carrera', 'nombre'),
-                SelectFilter::make('semestre_actual_id')->options(Semestre::class),
-                SelectFilter::make('generacion_id')->relationship('generacion', 'clave'),
+                SelectFilter::make('carrera_id')
+                    ->label('Carrera')
+                    ->relationship('carrera', 'nombre')
+                    ->multiple()
+                    ->preload()
+                    ->indicator('Carrera'),
+                SelectFilter::make('semestre_actual_id')
+                    ->label('Semestre')
+                    ->options(Semestre::class)
+                    ->multiple(),
+                SelectFilter::make('generacion_id')
+                    ->label('Generación')
+                    ->relationship('generacion', 'clave')
+                    ->multiple()
+                    ->preload(),
             ])
+            ->filtersTriggerAction(fn ($action) => $action->button()->label('Filtros'))
             ->actions([
-                EditAction::make(),
+                EditAction::make()
+                    ->iconButton()
+                    ->tooltip('Editar'),
                 Action::make('imprimir_boleta')
                     ->label('Boleta')
-                    ->icon('heroicon-o-printer')
+                    ->icon(Heroicon::OutlinedPrinter)
                     ->color('success')
-                    ->url(fn ($record) => route('boletas.download', $record))
+                    ->button()
+                    ->url(fn (Alumno $record): string => route('boletas.download', $record))
                     ->openUrlInNewTab(),
             ])
-            ->bulkActions([BulkActionGroup::make([DeleteBulkAction::make()])]);
+            ->bulkActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 
     public static function getPages(): array
