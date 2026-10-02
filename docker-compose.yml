@@ -25,6 +25,8 @@ services:
       - storage_data:/var/www/html/storage
       - bootstrap_cache:/var/www/html/bootstrap/cache
       - ./default.conf
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
   db:
     image: mysql:8.4
     container_name: sis-cbta254-db
@@ -44,8 +46,17 @@ services:
       timeout: 3s
       retries: 20
       start_period: 20s
+    certbot:
+        image: certbot/certbot
+        container_name: laravel_certbot
+        volumes:
+            - .:/var/www/html
+            - certbot-etc:/etc/letsencrypt
+            - certbot-var:/var/lib/letsencrypt
 
 volumes:
   db_data:
   storage_data:
   bootstrap_cache:
+  certbot-etc:
+  certbot-var:
