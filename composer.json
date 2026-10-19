@@ -6,7 +6,7 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "barryvdh/laravel-dompdf": "^3.1",
         "bezhansalleh/filament-shield": "^4.3",
         "diogogpinto/filament-auth-ui-enhancer": "*",
@@ -52,7 +52,7 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"npm run dev\" --names='server,queue,vite'"
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1 --timeout=0\" \"npm run dev\" --names='server,queue,vite'"
         ],
         "test": [
             "@php artisan config:clear --ansi @no_additional_args",
@@ -96,10 +96,6 @@
             "block-insecure": false,
             "ignore": ["[PKSA-y2md-q1qw-qbzb]"]
         }
-    },
-    "audit": {
-        "ignore": ["PKSA-y2md-q1qw-qbzb"],
-        "block-insecure": false
     },
     "minimum-stability": "stable",
     "prefer-stable": true

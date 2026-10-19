@@ -1,7 +1,44 @@
+@php
+    $panels = [
+        'admin' => [
+            'image' => 'images/admin.jpg',
+            'badge' => 'Panel Administrativo',
+            'title' => 'Gestión escolar',
+            'subtitle' => 'Acceso exclusivo para personal autorizado.',
+        ],
+        'alumno' => [
+            'image' => 'images/Alumnos.jpg',
+            'badge' => 'Panel Alumnos',
+            'title' => 'Tu vida escolar',
+            'subtitle' => 'Consulta calificaciones, horarios, asistencias y avisos.',
+        ],
+        'profesor' => [
+            'image' => 'images/Teacher.jpg',
+            'badge' => 'Panel Docentes',
+            'title' => 'Gestión académica',
+            'subtitle' => 'Registra asistencias, calificaciones y consulta tu carga docente.',
+        ],
+        'financiero' => [
+            'image' => 'images/Financieros.jpg',
+            'badge' => 'Panel Financiero',
+            'title' => 'Control financiero',
+            'subtitle' => 'Consulta pagos, cortes de caja y estados de cuenta.',
+        ],
+        'servicios-escolares' => [
+            'image' => 'images/ControlEscolar.jpg',
+            'badge' => 'Panel Servicios Escolares',
+            'title' => 'Control escolar',
+            'subtitle' => 'Administra inscripciones, grupos y carga académica.',
+        ],
+    ];
+
+    $panel = $panels[filament()->getCurrentPanel()?->getId()] ?? $panels['admin'];
+@endphp
+
 <div class="relative flex h-full w-full flex-col justify-between overflow-hidden bg-slate-900">
     {{-- Background image con overlay --}}
     <div class="absolute inset-0">
-        <img src="{{ asset('images/admin.jpg') }}" alt="CBTA 254" class="h-full w-full object-cover" />
+        <img src="{{ asset($panel['image']) }}" alt="CBTA 254" class="h-full w-full object-cover" />
         <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/90 via-[#004225]/85 to-slate-900/90"></div>
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(16,185,129,0.25),transparent_50%)]"></div>
     </div>
@@ -19,13 +56,13 @@
         <div class="max-w-lg">
             <div class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-emerald-100 ring-1 ring-white/20 backdrop-blur">
                 <span class="size-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                Panel Administrativo
+                {{ $panel['badge'] }}
             </div>
             <h1 class="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-white xl:text-4xl">
-                Gestión escolar<br />
+                {{ $panel['title'] }}<br />
             </h1>
             <p class="mt-3 text-sm leading-relaxed text-emerald-50/90">
-                Acceso exclusivo para personal autorizado.
+                {{ $panel['subtitle'] }}
             </p>
 
             <div class="mt-8 grid grid-cols-3 gap-3">

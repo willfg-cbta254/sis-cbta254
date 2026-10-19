@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Grupo extends Model
 {
-    protected $fillable = ['nombre', 'semestre_id', 'carrera_id', 'generacion_id', 'turno', 'capacidad', 'activo'];
+    protected $fillable = ['nombre', 'semestre_id', 'carrera_id', 'generacion_id', 'tutor_id', 'turno', 'capacidad', 'activo'];
 
     protected function casts(): array
     {
@@ -52,5 +52,15 @@ class Grupo extends Model
     public function cargaAcademica(): HasMany
     {
         return $this->hasMany(CargaAcademica::class);
+    }
+
+    public function tutor(): BelongsTo
+    {
+        return $this->belongsTo(Profesor::class, 'tutor_id');
+    }
+
+    public function tutoriaIncidencias(): HasMany
+    {
+        return $this->hasMany(TutoriaIncidencia::class);
     }
 }

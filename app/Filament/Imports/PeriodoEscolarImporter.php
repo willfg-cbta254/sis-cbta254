@@ -39,6 +39,11 @@ class PeriodoEscolarImporter extends Importer
         return new PeriodoEscolar;
     }
 
+    public function getJobConnection(): ?string
+    {
+        return app()->isLocal() ? 'sync' : null;
+    }
+
     public static function getCompletedNotificationBody(Import $import): string
     {
         $body = 'La importación de periodos escolares ha finalizado. '.Number::format($import->successful_rows).' filas importadas.';

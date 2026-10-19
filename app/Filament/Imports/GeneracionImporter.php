@@ -34,6 +34,11 @@ class GeneracionImporter extends Importer
         return new Generacion;
     }
 
+    public function getJobConnection(): ?string
+    {
+        return app()->isLocal() ? 'sync' : null;
+    }
+
     public static function getCompletedNotificationBody(Import $import): string
     {
         $body = 'La importación de generaciones ha finalizado. '.Number::format($import->successful_rows).' filas importadas.';

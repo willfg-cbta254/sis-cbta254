@@ -60,10 +60,11 @@ return [
             'strict' => true,
             'engine' => null,
             'dump' => [
-                'dump_binary_path' => 'C:\wamp64\bin\mysql\mysql8.4.7\bin',
+                'dump_binary_path' => env('DB_DUMP_BINARY_PATH', 'C:\xampp\mysql\bin'),
                 'use_single_transaction' => true,
                 'timeout' => 0,
                 'skip_ssl' => true,
+                'ssl_flag' => 'skip-ssl',
                 'add_extra_option' => '--protocol=TCP',
             ],
             'options' => extension_loaded('pdo_mysql') ? array_filter([

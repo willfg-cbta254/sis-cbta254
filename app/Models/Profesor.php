@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Profesor extends Model
 {
@@ -39,6 +40,26 @@ class Profesor extends Model
     public function cargaAcademica(): HasMany
     {
         return $this->hasMany(CargaAcademica::class);
+    }
+
+    public function grupoTutor(): HasOne
+    {
+        return $this->hasOne(Grupo::class, 'tutor_id');
+    }
+
+    public function tutoriaTutor(): HasOne
+    {
+        return $this->hasOne(TutoriaTutor::class);
+    }
+
+    public function tutoriaIncidenciasRegistradas(): HasMany
+    {
+        return $this->hasMany(TutoriaIncidencia::class, 'registrado_por_id');
+    }
+
+    public function tutoriaIncidenciasComoTutor(): HasMany
+    {
+        return $this->hasMany(TutoriaIncidencia::class, 'tutor_id');
     }
 
     public function asistencias(): HasMany

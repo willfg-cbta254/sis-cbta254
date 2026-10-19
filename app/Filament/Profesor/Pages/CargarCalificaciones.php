@@ -104,10 +104,18 @@ class CargarCalificaciones extends Page implements HasForms
 
         $profesorId = auth()->user()?->profesor?->id;
         $periodo = PeriodoEscolar::where('activo', true)->first();
+        $materia = Materia::find($this->selectedMateriaId);
 
-        $alumnos = Alumno::whereHas('inscripciones', fn (Builder $q) => $q->where('grupo_id', $this->selectedGroupId))
-            ->with('user')
-            ->get();
+        $alumnosQuery = Alumno::whereHas('inscripciones', fn (Builder $q) => $q->where('grupo_id', $this->selectedGroupId))
+            ->with('user');
+
+        if ($materia?->esOptativa()) {
+            $areaId = $materia->area_propedeutica_id;
+
+            $alumnosQuery->whereHas('seleccionArea', fn (Builder $q) => $q->where('area_propedeutica_id', $areaId));
+        }
+
+        $alumnos = $alumnosQuery->get();
 
         foreach ($alumnos as $alumno) {
             $existente = Calificacion::where('alumno_id', $alumno->id)

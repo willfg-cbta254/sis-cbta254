@@ -55,7 +55,7 @@ class CargaAcademicaImporter extends Importer
                 ->example('2025-A')
                 ->exampleHeader('periodo_escolar')
                 ->requiredMapping()
-                ->relationship(resolveUsing: ['clave', 'id'])
+                ->relationship(name: 'periodoEscolar', resolveUsing: ['clave', 'id'])
                 ->rules(['required'])
                 ->fillRecordUsing(fn (): null => null),
         ];
@@ -133,6 +133,11 @@ class CargaAcademicaImporter extends Importer
             'grupo_id' => $grupo->id,
             'periodo_escolar_id' => $periodo->id,
         ]);
+    }
+
+    public function getJobConnection(): ?string
+    {
+        return app()->isLocal() ? 'sync' : null;
     }
 
     public static function getCompletedNotificationBody(Import $import): string

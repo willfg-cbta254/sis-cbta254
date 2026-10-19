@@ -41,9 +41,10 @@ class ProfesorPanelProvider extends PanelProvider
             ->plugins([
                 AuthUIEnhancerPlugin::make()
                     ->formPanelPosition('left')
-                    ->formPanelWidth('45%')
+                    ->formPanelWidth('46%')
                     ->emptyPanelBackgroundImageUrl(asset('images/Teacher.jpg'))
-                    ->emptyPanelBackgroundImageOpacity('60%')
+                    ->emptyPanelBackgroundImageOpacity('0%')
+                    ->emptyPanelView('filament.auth.empty-panel')
                     ->showEmptyPanelOnMobile(false),
                 BreezyCore::make()
                     ->myProfile(

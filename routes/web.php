@@ -7,6 +7,10 @@ use App\Http\Controllers\FichaController;
 use App\Http\Controllers\PagoReciboController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/__debug_boom', function () {
+    throw new RuntimeException('boom');
+});
+
 Route::get('/', function () {
     return view('welcome');
 });

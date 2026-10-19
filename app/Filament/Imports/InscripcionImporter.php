@@ -43,6 +43,11 @@ class InscripcionImporter extends Importer
         return new Inscripcion;
     }
 
+    public function getJobConnection(): ?string
+    {
+        return app()->isLocal() ? 'sync' : null;
+    }
+
     public static function getCompletedNotificationBody(Import $import): string
     {
         $body = 'La importación de inscripciones ha finalizado. '.Number::format($import->successful_rows).' filas importadas.';

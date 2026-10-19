@@ -7,6 +7,7 @@ use App\Filament\Alumno\Pages\MisAsistencias;
 use App\Filament\Alumno\Pages\MisCalificaciones;
 use App\Filament\Alumno\Pages\MisHorasLaborSocial;
 use App\Filament\Alumno\Pages\MisMaterias;
+use App\Filament\Alumno\Pages\SeleccionarAreaPropedeutica;
 use App\Filament\Alumno\Widgets\AlumnoStatsWidget;
 use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
 use Filament\Forms\Components\FileUpload;
@@ -46,9 +47,10 @@ class AlumnoPanelProvider extends PanelProvider
             ->plugins([
                 AuthUIEnhancerPlugin::make()
                     ->formPanelPosition('left')
-                    ->formPanelWidth('45%')
+                    ->formPanelWidth('46%')
                     ->emptyPanelBackgroundImageUrl(asset('images/Alumnos.jpg'))
-                    ->emptyPanelBackgroundImageOpacity('50%')
+                    ->emptyPanelBackgroundImageOpacity('0%')
+                    ->emptyPanelView('filament.auth.empty-panel')
                     ->showEmptyPanelOnMobile(false),
                 BreezyCore::make()
                     ->myProfile(
@@ -75,6 +77,7 @@ class AlumnoPanelProvider extends PanelProvider
                 MiHorario::class,
                 MisMaterias::class,
                 MisHorasLaborSocial::class,
+                SeleccionarAreaPropedeutica::class,
             ])
             ->widgets([
                 AccountWidget::class,

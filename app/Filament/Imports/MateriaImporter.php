@@ -30,7 +30,7 @@ class MateriaImporter extends Importer
                 ->requiredMapping()
                 ->label('Semestre')
                 ->rules(['required', 'string', 'in:'.implode(',', array_column(Semestre::cases(), 'value'))])
-                ->castStateUsing(fn ($state): ?string => $state ? ucfirst(strtolower($state)) : null),
+                ->castStateUsing(fn ($state): ?string => Semestre::normalize($state)),
             ImportColumn::make('horas_semana')
                 ->requiredMapping()
                 ->numeric()
@@ -41,6 +41,11 @@ class MateriaImporter extends Importer
     public function resolveRecord(): Materia
     {
         return new Materia;
+    }
+
+    public function getJobConnection(): ?string
+    {
+        return app()->isLocal() ? 'sync' : null;
     }
 
     public static function getCompletedNotificationBody(Import $import): string

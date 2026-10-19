@@ -120,7 +120,7 @@ class Respaldos extends Page
         $credContent .= "password = '{$dbPass}'\n";
         $credContent .= "port = '{$dbPort}'\n";
         $credContent .= "host = '{$dbHost}'\n";
-        $credContent .= "ssl-mode=DISABLED\n";
+        $credContent .= "skip-ssl\n";
         file_put_contents($credFile, $credContent);
 
         $command = sprintf(

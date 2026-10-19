@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class Alumno extends Model
 {
@@ -71,5 +73,33 @@ class Alumno extends Model
     public function horasLaborSocial(): HasMany
     {
         return $this->hasMany(HoraLaborSocial::class);
+    }
+
+    public function tutoriaIncidencias(): BelongsToMany
+    {
+        return $this->belongsToMany(TutoriaIncidencia::class, 'tutoria_incidencia_alumnos')
+            ->withTimestamps();
+    }
+
+    public function seleccionArea(): HasOne
+    {
+        return $this->hasOne(AlumnoAreaPropedeutica::class);
+    }
+
+    public function areaPropedeutica(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            AreaPropedeutica::class,
+            AlumnoAreaPropedeutica::class,
+            'alumno_id',
+            'id',
+            'id',
+            'area_propedeutica_id',
+        );
+    }
+
+    public function puedeSeleccionarArea(): bool
+    {
+        return $this->semestre_actual_id === Semestre::Quinto;
     }
 }

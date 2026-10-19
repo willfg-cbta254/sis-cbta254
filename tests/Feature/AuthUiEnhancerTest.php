@@ -40,11 +40,28 @@ it('registers the enhanced email verification page', function () {
     expect($action)->toBe(AuthUiEnhancerEmailVerificationPrompt::class);
 });
 
-it('injects the plugin configuration into the auth pages', function () {
-    $response = $this->get('/admin/login');
+it('injects the form panel width on every panel', function (string $path, string $formPanelWidth) {
+    $this->get($path)
+        ->assertSuccessful()
+        ->assertSee("--form-panel-width: {$formPanelWidth}");
+})->with([
+    ['/admin/login', '46%'],
+    ['/alumno/login', '46%'],
+    ['/financiero/login', '46%'],
+    ['/profesor/login', '46%'],
+    ['/servicios-escolares/login', '46%'],
+]);
 
-    $response->assertSuccessful()
-        ->assertSee('--form-panel-width: 45%')
-        ->assertSee('images/emprendimiento-social.png', false)
-        ->assertSee('opacity: 80%');
-});
+it('renders the shared custom empty panel view on every panel', function (string $path, string $badge, string $image) {
+    $this->get($path)
+        ->assertSuccessful()
+        ->assertSee($badge)
+        ->assertSee($image, false)
+        ->assertSee('images/logo.png', false);
+})->with([
+    ['/admin/login', 'Panel Administrativo', 'images/admin.jpg'],
+    ['/alumno/login', 'Panel Alumnos', 'images/Alumnos.jpg'],
+    ['/profesor/login', 'Panel Docentes', 'images/Teacher.jpg'],
+    ['/financiero/login', 'Panel Financiero', 'images/Financieros.jpg'],
+    ['/servicios-escolares/login', 'Panel Servicios Escolares', 'images/ControlEscolar.jpg'],
+]);

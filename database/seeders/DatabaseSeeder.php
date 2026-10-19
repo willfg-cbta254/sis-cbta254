@@ -34,26 +34,23 @@ class DatabaseSeeder extends Seeder
             ['clave' => 'TEC-ADM-EMP', 'nombre' => 'Técnico en Administración de Emprendimiento'],
         ];
         foreach ($carreras as $carrera) {
-            Carrera::create($carrera);
+            Carrera::firstOrCreate(['clave' => $carrera['clave']], $carrera);
         }
 
         // ========== PERIODOS ESCOLARES ==========
-        PeriodoEscolar::create([
-            'clave' => '2026-A',
+        PeriodoEscolar::firstOrCreate(['clave' => '2026-A'], [
             'fecha_inicio' => '2026-02-01',
             'fecha_fin' => '2026-07-15',
             'activo' => true,
         ]);
-        PeriodoEscolar::create([
-            'clave' => '2026-B',
+        PeriodoEscolar::firstOrCreate(['clave' => '2026-B'], [
             'fecha_inicio' => '2026-08-01',
             'fecha_fin' => '2027-01-15',
             'activo' => false,
         ]);
 
         // ========== GENERACION ==========
-        $gen = Generacion::create([
-            'clave' => '2023-2026',
+        $gen = Generacion::firstOrCreate(['clave' => '2023-2026'], [
             'anio_inicio' => 2023,
             'anio_fin' => 2026,
         ]);

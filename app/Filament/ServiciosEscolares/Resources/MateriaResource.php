@@ -48,6 +48,11 @@ class MateriaResource extends Resource
                 ->label('Semestre')
                 ->options(Semestre::class)
                 ->searchable()->preload()->required(),
+            Select::make('area_propedeutica_id')
+                ->label('Área propedéutica')
+                ->relationship('areaPropedeutica', 'nombre')
+                ->searchable()->preload()
+                ->placeholder('Ninguna (materia obligatoria)'),
             TextInput::make('horas_semana')->required()->numeric()->default(3)->minValue(1)->maxValue(30),
         ]);
     }
@@ -68,6 +73,7 @@ class MateriaResource extends Resource
                     ->sortable()
                     ->formatStateUsing(fn (TipoMateria $state): string => $state->value),
                 TextColumn::make('semestre_id')->label('Semestre')->sortable()->badge()->formatStateUsing(fn ($state) => $state?->value ? ucfirst($state->value) : ''),
+                TextColumn::make('areaPropedeutica.nombre')->label('Área propedéutica')->badge()->color('info')->placeholder('—'),
                 TextColumn::make('horas_semana')->sortable(),
                 TextColumn::make('profesores_count')->label('Profesores'),
             ])

@@ -39,7 +39,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->favicon(asset('images/favicon.ico'))
             ->brandLogo(asset('images/logo.png'))
-            ->brandLogoHeight('3rem')
+            ->brandLogoHeight('2rem')
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
             ->colors([
@@ -56,7 +56,7 @@ class AdminPanelProvider extends PanelProvider
                     ->formPanelWidth('46%')
                     ->emptyPanelBackgroundImageUrl(asset('images/admin.jpg'))
                     ->emptyPanelBackgroundImageOpacity('0%')
-                    ->emptyPanelView('filament.admin.auth.empty-panel')
+                    ->emptyPanelView('filament.auth.empty-panel')
                     ->showEmptyPanelOnMobile(false),
                 BreezyCore::make()
                     ->myProfile(
