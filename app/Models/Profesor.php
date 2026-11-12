@@ -76,4 +76,9 @@ class Profesor extends Model
     {
         return $this->hasMany(EstrategiaDidactica::class);
     }
+
+    public function solicitudesPermiso(): HasMany
+    {
+        return $this->hasMany(SolicitudPermiso::class);
+    }
 }
